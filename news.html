@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>News</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+</head>
+<body onload="NEWS();" class="bg-light">
+<div class="navbar bg-warning">
+<h2 class="navber-brand text-primary">News App</h2>
+<input id="search" class="form-control mb-2" type="textfield" placeholder="Search For News">
+
+<button id="send" class="btn btn-block btn-primary">search</button>
+</div>
+<div id="m" class="container">
+ 
+</div>
+
+<script type="text/javascript">
+
+let searchTerm = document.getElementById("search");
+let button = document.getElementById("send");
+
+button.addEventListener("click", NEWS);
+
+function NEWS(){
+let sea = searchTerm.value;
+
+if(sea == ""){
+let url = "https://newsapi.org/v2/everything?q=news&from=2019-05-28&sortBy=publishedAt&apiKey=e773652933ca4e4cb3583e898a963add";
+let xhr = new XMLHttpRequest();
+
+
+xhr.open("GET",url);
+
+xhr.onload = function(){
+
+if(this.status == 200){
+let News = JSON.parse(this.responseText);
+let news = News.articles;
+let output = "<div class='card-columns'>"
+
+news.forEach(post =>{
+output += ` 
+<div class="card">
+  <a href="${post.urlToImage}"><img class="card-img-top" src="${post.urlToImage}" alt="Card image cap"></a>
+  <div class="card-body">
+    <h5 class="card-title">${post.title}</h5>
+    <p class="card-text text-primary">${post.description}</p>
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item text-secondary">${post.content}</li>
+    <li class="list-group-item">Published At : ${post.publishedAt}</li>
+  </ul>
+  <div class="card-body">
+    <a href="${post.url}" class="btn btn-block btn-warning">Read More</a>
+  </div>
+</div>`;
+
+});
+
+output += "</div>"
+document.getElementById("m").innerHTML = output;
+
+} else{
+alert("First Processing Has Failed!!!");
+}
+
+}
+
+xhr.onerror = () => console.log(error);
+
+xhr.send();
+} else{
+let url = "https://newsapi.org/v2/everything?q="+sea+"&from=2019-05-28&sortBy=publishedAt&apiKey=e773652933ca4e4cb3583e898a963add";
+let xhr = new XMLHttpRequest();
+
+xhr.open("GET", url);
+
+xhr.onload = function(){
+if(this.status == 200){
+let News = JSON.parse(this.responseText);
+
+let news = News.articles;
+
+let output = "<div class='card-columns'>"
+
+news.forEach(post =>{
+output += ` 
+<div class="card">
+  <a href="${post.urlToImage}"><img class="card-img-top" src="${post.urlToImage}" alt="Card image cap"></a>
+  <div class="card-body">
+    <h5 class="card-title">${post.title}</h5>
+    <p class="card-text text-primary">${post.description}</p>
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item text-secondary">${post.content}</li>
+    <li class='list-group-item'>Published At : ${post.publishedAt}</li>
+  </ul>
+  <div class="card-body">
+    <a href="${post.url}" class="btn btn-block btn-warning">Read More</a>
+  </div>
+</div>`;
+
+})
+
+output += "</div>"
+document.getElementById("m").innerHTML = output;
+
+
+} else{
+alert("Second Processing Has Also Failed!!!");
+}
+
+}
+
+xhr.onerror = () => console.log(error);
+
+xhr.send();
+}
+
+
+searchTerm.value = "";
+}
+</script>
+</body>
+</html>
